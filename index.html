@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>外烟国烟汇 · 微信直供</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+SC:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #F7F8FA;
+      --card: #FFFFFF;
+      --text: #1A1A1A;
+      --text2: #6B7280;
+      --text3: #9CA3AF;
+      --accent: #4CAF7D;
+      --accent-light: #E8F5EF;
+      --accent-dark: #3D9468;
+      --border: #E5E7EB;
+      --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+      --shadow-hover: 0 4px 16px rgba(0,0,0,0.1);
+      --radius: 10px;
+      --radius-sm: 6px;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #DDD; border-radius: 2px; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Noto Sans SC', 'Inter', sans-serif;
+      color: var(--text);
+      font-size: 14px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      background:
+        url('bg-main.webp') no-repeat center bottom / auto 55% fixed,
+        linear-gradient(180deg, #F7F8FA 0%, #EDF5EF 50%, #E8F2EC 100%);
+    }
+
+    /* ── Cartoon background layer ── */
+    .float-chars {
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      pointer-events: none; z-index: 0; overflow: hidden;
+    }
+    .float-char {
+      position: absolute;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      transition: transform 0.3s ease, opacity 0.3s;
+    }
+    .float-char img { width: 100%; height: 100%; object-fit: cover; }
+    .float-char:hover { transform: scale(1.06); }
+
+    /* Soft gradient overlay for readability */
+    body::before {
+      content: '';
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      background:
+        linear-gradient(180deg, rgba(247,248,250,0.93) 0%, rgba(247,248,250,0.80) 35%, rgba(247,248,250,0.45) 70%, rgba(247,248,250,0.20) 100%);
+      pointer-events: none; z-index: 1;
+    }
+
+    /* ── Header ── */
+    header {
+      background: rgba(255,255,255,0.94);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+      position: sticky; top: 0; z-index: 100;
+    }
+    .header-inner {
+      max-width: 1100px; margin: 0 auto; padding: 0 24px;
+      height: 60px; display: flex; align-items: center; justify-content: space-between;
+    }
+    .logo { font-size: 18px; font-weight: 600; color: var(--text); text-decoration: none; letter-spacing: -0.02em; }
+    .logo span { color: var(--accent); }
+    nav { display: flex; gap: 20px; align-items: center; }
+    nav a { text-decoration: none; color: var(--text2); font-size: 13px; transition: color 0.2s; }
+    nav a:hover { color: var(--accent); }
+    .nav-btn {
+      background: var(--accent); color: #fff !important;
+      padding: 8px 18px; border-radius: 20px;
+      font-size: 13px !important; font-weight: 500; transition: background 0.2s;
+    }
+    .nav-btn:hover { background: var(--accent-dark); }
+
+    /* ── Hero ── */
+    .hero {
+      max-width: 1100px; margin: 0 auto;
+      padding: 56px 24px 48px;
+      display: flex; align-items: center; gap: 48px;
+      position: relative; z-index: 1;
+    }
+    @media (max-width: 768px) { .hero { flex-direction: column; padding: 36px 20px; text-align: center; } }
+    .hero-left { flex: 1; }
+    .hero-right { flex-shrink: 0; }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--accent-light); color: var(--accent);
+      font-size: 12px; font-weight: 500; padding: 5px 12px;
+      border-radius: 20px; margin-bottom: 18px;
+    }
+    .hero-badge .dot { width: 6px; height: 6px; background: var(--accent); border-radius: 50%; }
+    .hero h1 {
+      font-size: clamp(24px, 4vw, 36px); font-weight: 600;
+      line-height: 1.35; letter-spacing: -0.02em; margin-bottom: 12px;
+    }
+    .hero h1 em { color: var(--accent); font-style: normal; }
+    .hero-desc { font-size: 14px; color: var(--text2); max-width: 380px; margin-bottom: 24px; line-height: 1.8; }
+    .hero-tags { display: flex; gap: 8px; flex-wrap: wrap; }
+    .hero-tag {
+      background: var(--card); border: 1px solid var(--border); border-radius: 20px;
+      padding: 5px 14px; font-size: 12px; color: var(--text2);
+    }
+    .hero-mascots { margin-top: 24px; font-size: 28px; letter-spacing: 4px; opacity: 0.7; }
+    .hero-img { width: 280px; height: 280px; border-radius: 20px; overflow: hidden; box-shadow: var(--shadow-hover); }
+    .hero-img img { width: 100%; height: 100%; object-fit: cover; }
+    @media (max-width: 768px) { .hero-img { width: 200px; height: 200px; } }
+
+    /* ── Banner ── */
+    .banner { background: var(--accent); padding: 14px 24px; position: relative; z-index: 1; }
+    .banner-inner { max-width: 1100px; margin: 0 auto; display: flex; gap: 32px; align-items: center; flex-wrap: wrap; justify-content: center; }
+    .banner-item { display: flex; align-items: center; gap: 7px; color: rgba(255,255,255,0.92); font-size: 13px; font-weight: 500; }
+    .banner-item .icon { font-size: 16px; }
+
+    /* ── Mascot strip ── */
+    .mascot-strip {
+      background: var(--accent-light);
+      border-top: 1px solid rgba(76,175,125,0.15);
+      border-bottom: 1px solid rgba(76,175,125,0.15);
+      padding: 12px 24px; text-align: center;
+      font-size: 20px; letter-spacing: 8px;
+      color: var(--accent); opacity: 0.7;
+      position: relative; z-index: 1;
+    }
+
+    /* ── Section ── */
+    .section { max-width: 1100px; margin: 0 auto; padding: 40px 24px 56px; position: relative; z-index: 1; }
+    .section-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; flex-wrap: wrap; gap: 12px; }
+    .section-title { font-size: 20px; font-weight: 600; }
+
+    /* ── Search ── */
+    .search-bar {
+      display: flex; gap: 10px; margin-bottom: 20px;
+      position: relative; z-index: 1;
+    }
+    .search-input-wrap {
+      flex: 1; position: relative;
+    }
+    .search-input {
+      width: 100%; padding: 10px 16px 10px 40px;
+      border: 1px solid var(--border); border-radius: 24px;
+      background: var(--card); font-family: 'Noto Sans SC', sans-serif;
+      font-size: 14px; color: var(--text); outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .search-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(76,175,125,0.1); }
+    .search-icon {
+      position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+      font-size: 15px; opacity: 0.5;
+    }
+    .search-clear {
+      position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+      background: none; border: none; font-size: 16px; cursor: pointer; color: var(--text3);
+      padding: 4px; display: none;
+    }
+    .search-clear.show { display: block; }
+    .search-result-hint {
+      font-size: 12px; color: var(--text3); padding: 0 4px;
+      display: none; align-items: center; gap: 4px;
+    }
+    .search-result-hint.show { display: flex; }
+
+    /* ── Filter ── */
+    .filter-bar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px; }
+    .fbtn {
+      padding: 6px 16px; border: 1px solid var(--border); border-radius: 20px;
+      background: var(--card); font-family: 'Noto Sans SC', sans-serif;
+      font-size: 13px; color: var(--text2); cursor: pointer; transition: all 0.2s;
+    }
+    .fbtn:hover { border-color: var(--accent); color: var(--accent); }
+    .fbtn.on { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+    /* ── Grid ── */
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 16px; }
+    @media (min-width: 900px) { .grid { grid-template-columns: repeat(5, 1fr); } }
+    .card {
+      background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+      overflow: hidden; transition: all 0.22s; cursor: pointer; box-shadow: var(--shadow);
+    }
+    .card:hover { box-shadow: var(--shadow-hover); transform: translateY(-2px); border-color: #D0D7DE; }
+    .card.hidden { display: none; }
+    .card-img { aspect-ratio: 1; background: #F0F2F5; overflow: hidden; position: relative; }
+    .card-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.35s; }
+    .card:hover .card-img img { transform: scale(1.05); }
+    .card-badge { position: absolute; top: 8px; left: 8px; background: rgba(255,255,255,0.92); color: var(--accent); font-size: 11px; font-weight: 500; padding: 3px 8px; border-radius: 20px; }
+    .card-body { padding: 12px 14px 14px; }
+    .card-name { font-size: 13px; font-weight: 500; margin-bottom: 6px; line-height: 1.4; }
+    .card-price-row { display: flex; align-items: baseline; gap: 6px; margin-bottom: 2px; }
+    .card-price { font-size: 17px; font-weight: 600; color: var(--accent); }
+    .card-price small { font-size: 11px; font-weight: 400; color: var(--text3); }
+    .card-carton { font-size: 11px; color: var(--text3); }
+
+    .no-results {
+      grid-column: 1/-1; text-align: center; padding: 60px 20px;
+      color: var(--text3); display: none;
+    }
+    .no-results.show { display: block; }
+    .no-results .icon { font-size: 40px; margin-bottom: 12px; }
+
+    /* ── Modal ── */
+    .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); z-index: 200; display: flex; align-items: center; justify-content: center; padding: 16px; opacity: 0; pointer-events: none; transition: opacity 0.2s; }
+    .modal-bg.open { opacity: 1; pointer-events: all; }
+    .modal { background: var(--card); border-radius: 14px; max-width: 380px; width: 100%; max-height: 92vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.18); transform: translateY(16px); transition: transform 0.2s; }
+    .modal-bg.open .modal { transform: translateY(0); }
+    .modal-img { width: 100%; aspect-ratio: 16/10; object-fit: cover; background: #F0F2F5; }
+    .modal-body { padding: 20px; }
+    .modal-badge { font-size: 11px; color: var(--accent); font-weight: 500; margin-bottom: 6px; }
+    .modal-name { font-size: 18px; font-weight: 600; margin-bottom: 4px; }
+    .modal-price { font-size: 22px; font-weight: 600; color: var(--accent); margin-bottom: 14px; }
+    .modal-price small { font-size: 12px; font-weight: 400; color: var(--text3); }
+    .modal-line { display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: var(--text3); margin-bottom: 12px; padding: 10px 14px; background: var(--bg); border-radius: var(--radius-sm); }
+    .modal-line strong { color: var(--text2); }
+    .modal-line .free { color: var(--accent); font-weight: 500; }
+    .qty-section { margin-bottom: 18px; }
+    .qty-label { font-size: 13px; font-weight: 500; margin-bottom: 10px; }
+    .qty-type { display: flex; gap: 8px; margin-bottom: 10px; }
+    .qty-type-btn { flex: 1; padding: 9px; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--card); font-family: 'Noto Sans SC', sans-serif; font-size: 13px; color: var(--text2); cursor: pointer; transition: all 0.2s; text-align: center; }
+    .qty-type-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .qty-type-btn.on { background: var(--accent-light); border-color: var(--accent); color: var(--accent); font-weight: 500; }
+    .qty-row { display: flex; align-items: center; justify-content: space-between; }
+    .qty-ctrl { display: flex; align-items: center; border: 1px solid var(--border); border-radius: var(--radius-sm); overflow: hidden; }
+    .qty-btn { width: 38px; height: 38px; border: none; background: var(--bg); font-size: 18px; cursor: pointer; color: var(--text); transition: background 0.15s; }
+    .qty-btn:hover { background: #E8EAED; }
+    .qty-num { width: 52px; text-align: center; font-size: 15px; font-weight: 600; border: none; background: var(--card); color: var(--text); border-left: 1px solid var(--border); border-right: 1px solid var(--border); }
+    .qty-total { text-align: right; }
+    .qty-total-label { font-size: 11px; color: var(--text3); }
+    .qty-total-price { font-size: 22px; font-weight: 700; color: var(--accent); }
+    .qty-total-price small { font-size: 12px; font-weight: 400; }
+    .modal-inner { position: relative; }
+    .btn-order { width: 100%; padding: 14px; background: var(--accent); color: #fff; border: none; border-radius: var(--radius-sm); font-family: 'Noto Sans SC', sans-serif; font-size: 15px; font-weight: 600; cursor: pointer; transition: background 0.2s; margin-top: 4px; }
+    .btn-order:hover { background: var(--accent-dark); }
+    .modal-close { position: absolute; top: 10px; right: 10px; width: 32px; height: 32px; border: none; background: rgba(255,255,255,0.9); color: var(--text); border-radius: 50%; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    .modal-ship { text-align: center; font-size: 11px; color: var(--text3); margin-top: 8px; }
+    .modal-ship span { color: var(--accent); font-weight: 500; }
+
+    /* ── Contact ── */
+    .contact { background: var(--card); border-top: 1px solid var(--border); padding: 56px 24px; position: relative; z-index: 1; }
+    .contact-inner { max-width: 480px; margin: 0 auto; }
+    .contact-title { font-size: 24px; font-weight: 600; text-align: center; margin-bottom: 6px; }
+    .contact-sub { text-align: center; color: var(--text2); font-size: 14px; margin-bottom: 32px; }
+    .wechat-notice { background: var(--accent-light); border-radius: var(--radius); padding: 18px 20px; display: flex; gap: 14px; margin-bottom: 28px; align-items: flex-start; }
+    .notice-icon { font-size: 24px; flex-shrink: 0; }
+    .notice-title { font-size: 14px; font-weight: 600; color: var(--accent); margin-bottom: 4px; }
+    .notice-body { font-size: 13px; color: var(--text2); line-height: 1.7; }
+    .notice-body strong { color: var(--text); }
+    .fg { margin-bottom: 14px; }
+    .fg label { display: block; font-size: 12px; color: var(--text2); margin-bottom: 6px; font-weight: 500; }
+    .fg input, .fg textarea, .fg select { width: 100%; padding: 11px 14px; border: 1px solid var(--border); border-radius: var(--radius-sm); font-family: 'Noto Sans SC', sans-serif; font-size: 14px; color: var(--text); background: var(--bg); outline: none; transition: border-color 0.2s; }
+    .fg input:focus, .fg textarea:focus, .fg select:focus { border-color: var(--accent); }
+    .fg textarea { resize: vertical; min-height: 72px; }
+    .fg select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%239CA3AF' d='M6 8L1 3h10z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 32px; }
+    .fg select option { background: var(--card); }
+    .fg-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .btn-submit { width: 100%; padding: 14px; background: var(--accent); color: #fff; border: none; border-radius: var(--radius-sm); font-family: 'Noto Sans SC', sans-serif; font-size: 15px; font-weight: 600; cursor: pointer; transition: background 0.2s; margin-top: 6px; }
+    .btn-submit:hover { background: var(--accent-dark); }
+    .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; }
+    .success-msg { display: none; text-align: center; padding: 40px 0; }
+    .success-msg.show { display: block; }
+    .success-icon { font-size: 40px; margin-bottom: 14px; }
+    .success-msg h3 { font-size: 18px; font-weight: 600; margin-bottom: 8px; }
+    .success-msg p { color: var(--text2); font-size: 14px; }
+
+    /* ── Footer ── */
+    footer { border-top: 1px solid var(--border); padding: 24px; text-align: center; position: relative; z-index: 1; }
+    footer p { font-size: 12px; color: var(--text3); }
+
+    /* Mobile */
+    .ham { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 4px; }
+    .ham span { display: block; width: 18px; height: 2px; background: var(--text); border-radius: 1px; }
+    @media (max-width: 640px) {
+      .ham { display: flex; }
+      nav { display: none; }
+      nav.open { display: flex; flex-direction: column; position: absolute; top: 60px; left: 0; right: 0; background: var(--card); border-bottom: 1px solid var(--border); padding: 16px 24px; gap: 14px; }
+      .fg-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Floating anime-style illustration layer -->
+<div class="float-chars" id="floatChars">
+  <!-- 图3：被窝星星 → 左下角 -->
+  <div class="float-char" style="width:120px;height:120px;bottom:6%;left:2%;opacity:0.22;border-radius:16px"><img src="bg-star.webp" alt="" loading="lazy"></div>
+  <!-- 图5：小白哭脸 → 右下角 -->
+  <div class="float-char" style="width:90px;height:90px;bottom:8%;right:3%;opacity:0.25;border-radius:16px"><img src="bg-shiro.webp" alt="" loading="lazy"></div>
+</div>
+
+<header>
+  <div class="header-inner">
+    <a href="#" class="logo">外烟国烟<span>汇</span></a>
+    <button class="ham" onclick="document.querySelector('nav').classList.toggle('open')" aria-label="菜单">
+      <span></span><span></span><span></span>
+    </button>
+    <nav>
+      <a href="#products">全部商品</a>
+      <a href="#contact">联系下单</a>
+      <a href="#contact" class="nav-btn">立即下单</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-left">
+    <div class="hero-badge"><span class="dot"></span>正品渠道 · 一件起发</div>
+    <h1>外烟 · 国烟<br>一站直供</h1>
+    <p class="hero-desc">
+      爱喜、万宝路、中华、荷花、利群等品牌齐全。<br>
+      最低 1 包起购，一条包邮，微信直接下单。
+    </p>
+    <div class="hero-tags">
+      <span class="hero-tag">🚬 ESSE 爱喜</span>
+      <span class="hero-tag">🇺🇸 万宝路</span>
+      <span class="hero-tag">🇨🇳 中华系列</span>
+      <span class="hero-tag">🌸 荷花系列</span>
+      <span class="hero-tag">🏮 利群系列</span>
+    </div>
+    <div class="hero-mascots">🎮 🐱‍👤 🐾 ⭐ 🌸 🐲 🦋 🍃 🎀 🔮</div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-img">
+      <img src="data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20width%3D'560'%20height%3D'560'%3E%3Crect%20width%3D'560'%20height%3D'560'%20rx%3D'20'%20fill%3D'%23F0FBF5'%2F%3E%3C!--%20background%20--%3E%3Crect%20x%3D'60'%20y%3D'80'%20width%3D'440'%20height%3D'400'%20rx%3D'20'%20fill%3D'%23ffffff'%20opacity%3D'0.7'%2F%3E%3C!--%20pack%20top%20lid%20--%3E%3Crect%20x%3D'60'%20y%3D'80'%20width%3D'440'%20height%3D'120'%20rx%3D'20'%20fill%3D'%234CAF7D'%2F%3E%3Ctext%20x%3D'280'%20y%3D'158'%20text-anchor%3D'middle'%20font-family%3D'Noto%20Sans%20SC%2Csans-serif'%20font-weight%3D'600'%20font-size%3D'34'%20fill%3D'%23ffffff'%3E%E5%A4%96%E7%83%9F%20%E5%9B%BD%E7%83%9F%20%E6%B1%87%3C%2Ftext%3E%3C!--%20brand%20grid%20--%3E%3Crect%20x%3D'80'%20y%3D'220'%20width%3D'120'%20height%3D'80'%20rx%3D'12'%20fill%3D'%23FFF3E0'%2F%3E%3Crect%20x%3D'80'%20y%3D'220'%20width%3D'120'%20height%3D'12'%20rx%3D'6'%20fill%3D'%23E65100'%2F%3E%3Ctext%20x%3D'140'%20y%3D'273'%20text-anchor%3D'middle'%20font-family%3D'Noto%20Sans%20SC%2Csans-serif'%20font-weight%3D'700'%20font-size%3D'28'%20fill%3D'%23E65100'%3EM%3C%2Ftext%3E%3Crect%20x%3D'220'%20y%3D'220'%20width%3D'120'%20height%3D'80'%20rx%3D'12'%20fill%3D'%23FDECEA'%2F%3E%3Crect%20x%3D'220'%20y%3D'220'%20width%3D'120'%20height%3D'12'%20rx%3D'6'%20fill%3D'%23C62828'%2F%3E%3Ctext%20x%3D'280'%20y%3D'273'%20text-anchor%3D'middle'%20font-family%3D'Noto%20Sans%20SC%2Csans-serif'%20font-weight%3D'700'%20font-size%3D'28'%20fill%3D'%23C62828'%3E%E4%B8%AD%3C%2Ftext%3E%3Crect%20x%3D'360'%20y%3D'220'%20width%3D'120'%20height%3D'80'%20rx%3D'12'%20fill%3D'%23FCE4EC'%2F%3E%3Crect%20x%3D'360'%20y%3D'220'%20width%3D'120'%20height%3D'12'%20rx%3D'6'%20fill%3D'%23AD1457'%2F%3E%3Ctext%20x%3D'420'%20y%3D'273'%20text-anchor%3D'middle'%20font-family%3D'Noto%20Sans%20SC%2Csans-serif'%20font-weight%3D'700'%20font-size%3D'28'%20fill%3D'%23AD1457'%3E%E8%8D%B7%3C%2Ftext%3E%3C!--%20mid%20row%20--%3E%3Crect%20x%3D'80'%20y%3D'320'%20width%3D'120'%20height%3D'80'%20rx%3D'12'%20fill%3D'%23E8F5EF'%2F%3E%3Crect%20x%3D'80'%20y%3D'320'%20width%3D'120'%20height%3D'12'%20rx%3D'6'%20fill%3D'%234CAF7D'%2F%3E%3Ctext%20x%3D'140'%20y%3D'373'%20text-anchor%3D'middle'%20font-family%3D'Noto%20Sans%20SC%2Csans-serif'%20font-weight%3D'700'%20font-size%3D'28'%20fill%3D'%234CAF7D'%3EE%3C%2Ftext%3E%3Crect%20x%3D'220'%20y%3D'320'%20width%3D'120'%20height%3D'80'%20rx%3D'12'%20fill%3D'%23FFF8E1'%2F%3E%3Crect%20x%3D'220'%20y%3D'320'%20width%3D'120'%20height%3D'12'%20rx%3D'6'%20fill%3D'%23F57F17'%2F%3E%3Ctext%20x%3D'280'%20y%3D'373'%20text-anchor%3D'middle'%20font-family%3D'Noto%20Sans%20SC%2Csans-serif'%20font-weight%3D'700'%20font-size%3D'28'%20fill%3D'%23F57F17'%3E%E5%88%A9%3C%2Ftext%3E%3Crect%20x%3D'360'%20y%3D'320'%20width%3D'120'%20height%3D'80'%20rx%3D'12'%20fill%3D'%23E3F2FD'%2F%3E%3Crect%20x%3D'360'%20y%3D'320'%20width%3D'120'%20height%3D'12'%20rx%3D'6'%20fill%3D'%231565C0'%2F%3E%3Ctext%20x%3D'420'%20y%3D'373'%20text-anchor%3D'middle'%20font-family%3D'Noto%20Sans%20SC%2Csans-serif'%20font-weight%3D'700'%20font-size%3D'28'%20fill%3D'%231565C0'%3E7%3C%2Ftext%3E%3C!--%20bottom%20tag%20--%3E%3Crect%20x%3D'80'%20y%3D'420'%20width%3D'400'%20height%3D'40'%20rx%3D'20'%20fill%3D'%234CAF7D'%2F%3E%3Ctext%20x%3D'280'%20y%3D'447'%20text-anchor%3D'middle'%20font-family%3D'Noto%20Sans%20SC%2Csans-serif'%20font-weight%3D'400'%20font-size%3D'18'%20fill%3D'%23ffffff'%3E50%E6%AC%BE%E5%95%86%E5%93%81%20%E4%B8%80%E4%BB%B6%E8%B4%AD%E4%B9%B0%20%E4%B8%80%E6%9D%A1%E5%8C%85%E9%83%A8%3C%2Ftext%3E%3C%2Fsvg%3E" alt="外烟国烟汇">
+    </div>
+  </div>
+</section>
+
+<div class="banner">
+  <div class="banner-inner">
+    <div class="banner-item"><span class="icon">📦</span>一件起发</div>
+    <div class="banner-item"><span class="icon">🚚</span>一条包邮</div>
+    <div class="banner-item"><span class="icon">✅</span>正品保障</div>
+    <div class="banner-item"><span class="icon">💬</span>微信下单</div>
+    <div class="banner-item"><span class="icon">⚡</span>当天发货</div>
+  </div>
+</div>
+
+<div class="mascot-strip">🌸 🐲 ⭐ 🦋 🍃 🎀 🔮 🎮 🐱‍👤 🐾 🌸 🐲 ⭐ 🦋 🍃</div>
+
+<section class="section" id="products">
+  <div class="section-head">
+    <div class="section-title">🌸 全部商品</div>
+    <div class="section-count" id="cnt-label">共 50 款</div>
+  </div>
+
+  <!-- Search bar -->
+  <div class="search-bar">
+    <div class="search-input-wrap">
+      <span class="search-icon">🔍</span>
+      <input class="search-input" id="searchInput" type="text" placeholder="搜索商品名称、品牌..." oninput="doSearch(this.value)">
+      <button class="search-clear" id="searchClear" onclick="clearSearch()">✕</button>
+    </div>
+    <div class="search-result-hint" id="searchHint">
+      <span id="searchCount"></span>
+      <button onclick="clearSearch()" style="background:none;border:none;cursor:pointer;color:var(--accent);font-size:12px;">清除</button>
+    </div>
+  </div>
+
+  <!-- Category filters -->
+  <div class="filter-bar">
+    <button class="fbtn on" data-f="all">🌐 全部</button>
+    <button class="fbtn" data-f="esse">🚬 ESSE 爱喜</button>
+    <button class="fbtn" data-f="marlboro">🇺🇸 万宝路</button>
+    <button class="fbtn" data-f="japan">🇯🇵 七星 / 555</button>
+    <button class="fbtn" data-f="other">🐉 其他外烟</button>
+    <button class="fbtn" data-f="cn-zhonghua">🇨🇳 中华系列</button>
+    <button class="fbtn" data-f="cn-hehua">🌸 荷花系列</button>
+    <button class="fbtn" data-f="cn-liqun">🏮 利群系列</button>
+  </div>
+
+  <div class="grid" id="grid">
+    <div class="no-results" id="noResults">
+      <div class="icon">🔍</div>
+      <p>没有找到相关商品</p>
+    </div>
+  </div>
+</section>
+
+<!-- Product Modal -->
+<div class="modal-bg" id="modal" onclick="if(event.target===this)closeM()">
+  <div class="modal">
+    <div class="modal-inner">
+      <button class="modal-close" onclick="closeM()">×</button>
+      <img class="modal-img" id="m-img" src="" alt="">
+      <div class="modal-body">
+        <div class="modal-badge" id="m-tag"></div>
+        <div class="modal-name" id="m-name"></div>
+        <div class="modal-price" id="m-price"></div>
+        <div class="modal-line"><span>单包价格</span><strong id="m-price-pack">¥26/包</strong></div>
+        <div class="modal-line"><span>一条（10包）</span><span class="free">🎁 包邮</span></div>
+        <div class="qty-section">
+          <div class="qty-label">✨ 选择购买数量</div>
+          <div class="qty-type">
+            <button class="qty-type-btn on" id="type-pack" onclick="setType('pack')">📦 按包买</button>
+            <button class="qty-type-btn" id="type-carton" onclick="setType('carton')">🎀 按条买（包邮）</button>
+          </div>
+          <div class="qty-row">
+            <div class="qty-ctrl">
+              <button class="qty-btn" onclick="chgQty(-1)">−</button>
+              <input class="qty-num" id="qty-n" value="1" readonly>
+              <button class="qty-btn" onclick="chgQty(1)">+</button>
+            </div>
+            <div class="qty-total">
+              <div class="qty-total-label" id="qty-unit-label">包</div>
+              <div class="qty-total-price" id="qty-total-price">¥260</div>
+            </div>
+          </div>
+          <div class="qty-hint" id="qty-hint" style="font-size:11px;color:var(--text3);margin-top:6px;">⭐ 最少 1 包，1条=10包包邮</div>
+        </div>
+        <button class="btn-order" onclick="gotoContact()">🐾 立即下单 · 获取微信号</button>
+        <div class="modal-ship">📩 提交后 <span>30分钟内</span> 联系您，发送微信号</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section class="contact" id="contact">
+  <div class="contact-inner">
+    <div class="contact-title">🐾 立即下单</div>
+    <div class="contact-sub">填写信息后，我们将发送微信号给您</div>
+    <div class="wechat-notice">
+      <div class="notice-icon">💬</div>
+      <div>
+        <div class="notice-title">如何获取微信号？</div>
+        <div class="notice-body">
+          填写表单并提交后，我们会在 <strong>30 分钟内</strong> 通过您留下的联系方式主动联系您，发送专属微信号，方便后续下单沟通。
+        </div>
+      </div>
+    </div>
+    <form id="form" onsubmit="subForm(event)">
+      <div class="fg-row">
+        <div class="fg"><label>您的称呼 *</label><input type="text" name="name" required placeholder="怎么称呼您？"></div>
+        <div class="fg"><label>手机号码 *</label><input type="tel" name="phone" required placeholder="方便联系您"></div>
+      </div>
+      <div class="fg"><label>微信号（选填）</label><input type="text" name="wechat" placeholder="填写后可直接加您微信"></div>
+      <div class="fg">
+        <label>想要购买的商品</label>
+        <select name="product" id="form-prod">
+          <option value="">请选择商品</option>
+          <option>ESSE 爱喜(蓝) 细支</option>
+          <option>ESSE 爱喜(绿薄荷) 细支</option>
+          <option>ESSE 爱喜(银松) 细支</option>
+          <option>ESSE 爱喜(经典红) 细支</option>
+          <option>ESSE 爱喜(棒棒糖爆珠)</option>
+          <option>ESSE 爱喜(幻变葡萄爆珠)</option>
+          <option>ESSE 爱喜(迷你银)</option>
+          <option>ESSE 爱喜(black) 黑</option>
+          <option>ESSE 爱喜(橙子爆珠)</option>
+          <option>ESSE 爱喜 韩免版</option>
+          <option>万宝路(硬红) 美免</option>
+          <option>万宝路(软红) 韩免</option>
+          <option>万宝路(冰蓝) 日免</option>
+          <option>万宝路(黑冰) 日免</option>
+          <option>万宝路(葡萄爆珠)</option>
+          <option>万宝路(金标) 限量版</option>
+          <option>七星 Seven Stars(软盒) 日免</option>
+          <option>七星 Seven Stars(硬盒) 日免</option>
+          <option>555(国际版)</option>
+          <option>555(金锐) 爆珠版</option>
+          <option>骆驼 Camel(软黄) 美免</option>
+          <option>骆驼 Camel(蓝) 爆珠</option>
+          <option>大卫杜夫 Davidoff(经典)</option>
+          <option>大卫杜夫 Davidoff(薄荷)</option>
+          <option>百乐门 Parliament(软盒)</option>
+          <option>摩尔 More(软绿) 细支</option>
+          <option>摩尔 More(红酒爆珠)</option>
+          <option>云斯顿 Winston(硬红)</option>
+          <option>波迈 Pall Mall(软蓝)</option>
+          <option>健牌 Kent(香草爆珠)</option>
+          <option>其他 / 待定</option>
+          <option>── 国产烟：中华 · 荷花 · 利群 ──</option>
+          <option>中华(软盒)</option>
+          <option>中华(硬盒)</option>
+          <option>中华(软包小字)</option>
+          <option>中华(双中支)</option>
+          <option>中华(细支)</option>
+          <option>中华(金中支)</option>
+          <option>中华(金中支细支)</option>
+          <option>荷花(软盒)</option>
+          <option>荷花(硬盒)</option>
+          <option>荷花(细支)</option>
+          <option>荷花(九朵金)</option>
+          <option>荷花(32克拉)</option>
+          <option>荷花(软荷花)</option>
+          <option>利群(新版)</option>
+          <option>利群(长嘴)</option>
+          <option>利群(软包)</option>
+          <option>利群(硬盒)</option>
+          <option>利群(休闲云端)</option>
+          <option>利群(夜西湖)</option>
+          <option>利群(阳光橙)</option>
+        </select>
+      </div>
+      <div class="fg"><label>备注（数量、规格等）</label><textarea name="msg" placeholder="例如：爱喜蓝2包 + 万宝路冰蓝1条"></textarea></div>
+      <button type="submit" class="btn-submit" id="sub-btn">🐾 提交 · 获取微信号</button>
+    </form>
+    <div class="success-msg" id="success">
+      <div class="success-icon">✅🐾</div>
+      <h3>提交成功！</h3>
+      <p>我们会在 30 分钟内联系您<br>请保持手机畅通</p>
+    </div>
+  </div>
+</section>
+
+<div class="mascot-strip">🌸 🐲 ⭐ 🦋 🍃 🎀 🔮 🎮 🐱‍👤 🐾 🌸 🐲 ⭐ 🦋 🍃</div>
+
+<footer>
+  <p>© 2026 外烟国烟直供 · 正品渠道 · 批发零售 &nbsp;|&nbsp; <a href="admin.html" style="color:var(--text3);text-decoration:none;">🔐 管理</a></p>
+</footer>
+
+<script>
+const products = [
+  {id:1,  name:"ESSE 爱喜(蓝) 细支",     tag:"ESSE主打", cat:"esse",    price:260, packPrice:26, img:"esse-blue"},
+  {id:2,  name:"ESSE 爱喜(绿薄荷) 细支", tag:"ESSE主打", cat:"esse",    price:250, packPrice:25, img:"esse-green"},
+  {id:3,  name:"ESSE 爱喜(银松) 细支",   tag:"ESSE主打", cat:"esse",    price:280, packPrice:28, img:"esse-silver"},
+  {id:4,  name:"ESSE 爱喜(经典红) 细支", tag:"热销",     cat:"esse",    price:220, packPrice:22, img:"esse-red"},
+  {id:5,  name:"ESSE 爱喜(棒棒糖爆珠)",  tag:"爆珠",     cat:"esse",    price:260, packPrice:26, img:"esse-lollipop"},
+  {id:6,  name:"ESSE 爱喜(幻变葡萄爆珠)",tag:"爆珠",    cat:"esse",    price:270, packPrice:27, img:"esse-grape"},
+  {id:7,  name:"ESSE 爱喜(迷你银)",      tag:"ESSE主打", cat:"esse",    price:200, packPrice:20, img:"esse-mini"},
+  {id:8,  name:"ESSE 爱喜(black) 黑",   tag:"高端",     cat:"esse",    price:250, packPrice:25, img:"esse-black"},
+  {id:9,  name:"ESSE 爱喜(橙子爆珠)",   tag:"爆珠",     cat:"esse",    price:260, packPrice:26, img:"esse-orange"},
+  {id:10, name:"ESSE 爱喜 韩免版",      tag:"ESSE主打", cat:"esse",    price:240, packPrice:24, img:"esse-korea"},
+  {id:11, name:"万宝路(硬红) 美免",     tag:"万宝路",   cat:"marlboro",price:280, packPrice:28, img:"marl-red"},
+  {id:12, name:"万宝路(软红) 韩免",     tag:"万宝路",   cat:"marlboro",price:250, packPrice:25, img:"marl-softred"},
+  {id:13, name:"万宝路(冰蓝) 日免",     tag:"万宝路",   cat:"marlboro",price:240, packPrice:24, img:"marl-ice"},
+  {id:14, name:"万宝路(黑冰) 日免",     tag:"万宝路",   cat:"marlboro",price:260, packPrice:26, img:"marl-blackice"},
+  {id:15, name:"万宝路(葡萄爆珠)",       tag:"万宝路",   cat:"marlboro",price:270, packPrice:27, img:"marl-grape"},
+  {id:16, name:"万宝路(金标) 限量版",   tag:"万宝路",   cat:"marlboro",price:300, packPrice:30, img:"marl-gold"},
+  {id:17, name:"七星 Seven Stars(软盒) 日免",tag:"七星", cat:"japan",   price:250, packPrice:25, img:"seven-soft"},
+  {id:18, name:"七星 Seven Stars(硬盒) 日免",tag:"七星", cat:"japan",   price:250, packPrice:25, img:"seven-hard"},
+  {id:19, name:"555(国际版)",           tag:"三五",     cat:"japan",   price:220, packPrice:22, img:"555-intl"},
+  {id:20, name:"555(金锐) 爆珠版",       tag:"三五",     cat:"japan",   price:240, packPrice:24, img:"555-gold"},
+  {id:21, name:"骆驼 Camel(软黄) 美免", tag:"骆驼",     cat:"other",   price:220, packPrice:22, img:"camel-yellow"},
+  {id:22, name:"骆驼 Camel(蓝) 爆珠",   tag:"骆驼",     cat:"other",   price:230, packPrice:23, img:"camel-blue"},
+  {id:23, name:"大卫杜夫 Davidoff(经典)", tag:"大卫杜夫", cat:"other",  price:350, packPrice:35, img:"dav-classic"},
+  {id:24, name:"大卫杜夫 Davidoff(薄荷)", tag:"大卫杜夫", cat:"other", price:360, packPrice:36, img:"dav-menthol"},
+  {id:25, name:"百乐门 Parliament(软盒)", tag:"百乐门", cat:"other",   price:250, packPrice:25, img:"parliament"},
+  {id:26, name:"摩尔 More(软绿) 细支",  tag:"摩尔",     cat:"other",   price:220, packPrice:22, img:"more-green"},
+  {id:27, name:"摩尔 More(红酒爆珠)",    tag:"摩尔",     cat:"other",   price:240, packPrice:24, img:"more-wine"},
+  {id:28, name:"云斯顿 Winston(硬红)",    tag:"云斯顿",   cat:"other",   price:210, packPrice:21, img:"winston-red"},
+  {id:29, name:"波迈 Pall Mall(软蓝)",   tag:"波迈",     cat:"other",   price:200, packPrice:20, img:"pallmall"},
+  {id:30, name:"健牌 Kent(香草爆珠)",   tag:"健牌",     cat:"other",   price:240, packPrice:24, img:"kent-vanilla"},
+  // ── 国产烟：中华 · 荷花 · 利群 ──
+  // ── 中华系列 ──
+  {id:31, name:"中华(软盒)",             tag:"中华",     cat:"cn-zhonghua", price:700, packPrice:70,  img:"zhonghua-softbox"},
+  {id:32, name:"中华(硬盒)",             tag:"中华",     cat:"cn-zhonghua", price:450, packPrice:45,  img:"zhonghua-hardbox"},
+  {id:33, name:"中华(软包小字)",          tag:"中华",     cat:"cn-zhonghua", price:650, packPrice:65,  img:"zhonghua-softsmall"},
+  {id:34, name:"中华(双中支)",            tag:"中华",     cat:"cn-zhonghua", price:600, packPrice:60,  img:"zhonghua-dual"},
+  {id:35, name:"中华(细支)",             tag:"中华",     cat:"cn-zhonghua", price:550, packPrice:55,  img:"zhonghua-slim"},
+  {id:36, name:"中华(金中支)",            tag:"中华·高端", cat:"cn-zhonghua", price:1000, packPrice:100, img:"zhonghua-gold"},
+  {id:37, name:"中华(金中支细支)",          tag:"中华·高端", cat:"cn-zhonghua", price:950, packPrice:95,  img:"zhonghua-goldslim"},
+  // ── 荷花系列 ──
+  {id:38, name:"荷花(软盒)",             tag:"荷花",     cat:"cn-hehua", price:300,  packPrice:30,  img:"hehua-softbox"},
+  {id:39, name:"荷花(硬盒)",             tag:"荷花",     cat:"cn-hehua", price:450,  packPrice:45,  img:"hehua-hardbox"},
+  {id:40, name:"荷花(细支)",             tag:"荷花",     cat:"cn-hehua", price:450,  packPrice:45,  img:"hehua-slim"},
+  {id:41, name:"荷花(九朵金)",           tag:"荷花·高端", cat:"cn-hehua", price:1000, packPrice:100, img:"hehua-9gold"},
+  {id:42, name:"荷花(32克拉)",            tag:"荷花·高端", cat:"cn-hehua", price:900,  packPrice:90,  img:"hehua-32kara"},
+  {id:43, name:"荷花(软荷花)",            tag:"荷花",     cat:"cn-hehua", price:500,  packPrice:50,  img:"hehua-softself"},
+  // ── 利群系列 ──
+  {id:44, name:"利群(新版)",             tag:"利群",     cat:"cn-liqun", price:200,  packPrice:20,  img:"liqun-new"},
+  {id:45, name:"利群(长嘴)",             tag:"利群",     cat:"cn-liqun", price:250,  packPrice:25,  img:"liqun-long嘴"},
+  {id:46, name:"利群(软包)",             tag:"利群",     cat:"cn-liqun", price:280,  packPrice:28,  img:"liqun-soft"},
+  {id:47, name:"利群(硬盒)",             tag:"利群",     cat:"cn-liqun", price:280,  packPrice:28,  img:"liqun-hard"},
+  {id:48, name:"利群(休闲云端)",           tag:"利群·高端", cat:"cn-liqun", price:1000, packPrice:100, img:"liqun-xiuxian"},
+  {id:49, name:"利群(夜西湖)",            tag:"利群·特色", cat:"cn-liqun", price:350,  packPrice:35,  img:"liqun-westlake"},
+  {id:50, name:"利群(阳光橙)",            tag:"利群·特色", cat:"cn-liqun", price:280,  packPrice:28,  img:"liqun-sunshine"},
+];
+
+// ── 品牌专属 SVG 占位图（每张带品牌首字母，完全本地化不联网） ──
+const imgPalette = {
+  esse:     '#E8F5EF',
+  marlboro: '#FFF3E0',
+  japan:    '#E3F2FD',
+  other:    '#F3E5F5',
+  'cn-zhonghua': '#FDECEA',
+  'cn-hehua':   '#FCE4EC',
+  'cn-liqun':   '#FFF8E1',
+};
+const imgAccents = {
+  esse:     '#4CAF7D',
+  marlboro: '#E65100',
+  japan:    '#1565C0',
+  other:    '#6A1B9A',
+  'cn-zhonghua': '#C62828',
+  'cn-hehua':   '#AD1457',
+  'cn-liqun':   '#F57F17',
+};
+function getImg(p, large) {
+  const bg  = imgPalette[p.cat]  || '#F5F5F5';
+  const acc = imgAccents[p.cat]  || '#9E9E9E';
+  const sz  = large ? 600 : 300;
+  const fs  = large ? 56     : 40;
+  const pad = large ? 40     : 24;
+  // 取品牌名第一个汉字或字母
+  const name = p.name.trim();
+  let letter = name.charAt(0);
+  if (/[a-zA-Z]/.test(letter)) letter = letter.toUpperCase();
+  const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='${sz}' height='${sz}'>` +
+    `<rect width='${sz}' height='${sz}' rx='16' fill='${bg}'/>` +
+    `<rect x='${pad}' y='${sz*0.28}' width='${sz-pad*2}' height='${sz*0.5}' rx='10' fill='${acc}' opacity='0.15'/>` +
+    `<rect x='${pad+10}' y='${sz*0.36}' width='${sz-pad*2-20}' height='${sz*0.36}' rx='6' fill='${acc}' opacity='0.25'/>` +
+    `<text x='${sz/2}' y='${sz/2+fs*0.38}' text-anchor='middle'` +
+    ` font-family='Noto Sans SC,sans-serif' font-weight='600'` +
+    ` font-size='${fs}' fill='${acc}'>${letter}</text>` +
+    `</svg>`;
+  return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+}
+
+let curP = null;
+let buyType = 'pack';
+let activeFilter = 'all';
+let searchActive = false;
+
+// Load products from localStorage if available
+const savedProducts = localStorage.getItem('shop_products');
+if (savedProducts) {
+  try { products.length = 0; JSON.parse(savedProducts).forEach(p => products.push(p)); } catch(e){}
+}
+
+function saveProducts() {
+  localStorage.setItem('shop_products', JSON.stringify(products));
+}
+
+function render(f='all', kw=''){
+  const g=document.getElementById('grid');
+  const c=document.getElementById('cnt-label');
+  const nr=document.getElementById('noResults');
+  const list = products.filter(p=>{
+    const matchCat = f==='all' || p.cat===f;
+    const kw2 = kw.trim().toLowerCase();
+    const matchKw = !kw2 || p.name.toLowerCase().includes(kw2) || p.tag.toLowerCase().includes(kw2) || p.cat.toLowerCase().includes(kw2);
+    return matchCat && matchKw;
+  });
+  c.textContent = searchActive ? `搜索结果 ${list.length} 款` : `共 ${list.length} 款`;
+
+  // Remove old cards
+  g.querySelectorAll('.card').forEach(c=>c.remove());
+  nr.classList.remove('show');
+
+  if(list.length===0){ nr.classList.add('show'); return; }
+
+  list.forEach(p=>{
+    const d=document.createElement('div');
+    d.className='card'; d.onclick=()=>openM(p);
+    d.innerHTML=`<div class="card-img"><img src="${getImg(p)}" alt="${p.name}" loading="lazy"><span class="card-badge">${p.tag}</span></div><div class="card-body"><div class="card-name">${p.name}</div><div class="card-price-row"><div class="card-price">¥${p.packPrice}<small>/包</small></div></div><div class="card-carton">¥${p.price}/条 · 一条包邮</div></div>`;
+    g.appendChild(d);
+  });
+}
+
+function doSearch(kw){
+  searchActive = kw.trim().length > 0;
+  document.getElementById('searchClear').classList.toggle('show', searchActive);
+  document.getElementById('searchHint').classList.toggle('show', searchActive);
+  document.getElementById('searchCount').textContent = `"${kw}" 找到 ${products.filter(p=>p.name.toLowerCase().includes(kw.toLowerCase())).length} 款`;
+  render(activeFilter, kw);
+}
+
+function clearSearch(){
+  document.getElementById('searchInput').value='';
+  document.getElementById('searchClear').classList.remove('show');
+  document.getElementById('searchHint').classList.remove('show');
+  searchActive=false;
+  render(activeFilter,'');
+}
+
+document.querySelectorAll('.fbtn').forEach(b=>{
+  b.onclick=()=>{
+    document.querySelectorAll('.fbtn').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');
+    activeFilter=b.dataset.f;
+    render(activeFilter, searchActive ? document.getElementById('searchInput').value : '');
+  };
+});
+
+function openM(p){
+  curP=p; buyType='pack';
+  document.getElementById('m-img').src=getImg(p,true);
+  document.getElementById('m-tag').textContent=p.tag;
+  document.getElementById('m-name').textContent=p.name;
+  document.getElementById('m-price').innerHTML=`¥${p.price}<small>/条</small>`;
+  document.getElementById('m-price-pack').textContent=`¥${p.packPrice}/包`;
+  document.getElementById('qty-n').value=1;
+  document.getElementById('qty-unit-label').textContent='包';
+  document.getElementById('qty-hint').textContent='⭐ 最少 1 包，1条=10包包邮';
+  document.getElementById('qty-total-price').innerHTML=`¥${p.packPrice}<small>`;
+  document.getElementById('type-pack').classList.add('on');
+  document.getElementById('type-carton').classList.remove('on');
+  document.getElementById('modal').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeM(){ document.getElementById('modal').classList.remove('open'); document.body.style.overflow=''; }
+function setType(t){
+  buyType=t;
+  document.getElementById('type-pack').classList.toggle('on',t==='pack');
+  document.getElementById('type-carton').classList.toggle('on',t==='carton');
+  document.getElementById('qty-n').value=1; updatePrice();
+}
+function chgQty(d){ const n=document.getElementById('qty-n'); const v=parseInt(n.value)+d; if(v>=1&&v<=99)n.value=v; updatePrice(); }
+function updatePrice(){
+  if(!curP) return;
+  const n=parseInt(document.getElementById('qty-n').value);
+  if(buyType==='pack'){
+    document.getElementById('qty-unit-label').textContent='包';
+    document.getElementById('qty-hint').textContent=n>=10?'🎁 一条包邮！':'⭐ 最少 1 包，多包需另加运费';
+    document.getElementById('qty-total-price').innerHTML=`¥${(curP.packPrice*n)}<small>`;
+  } else {
+    document.getElementById('qty-unit-label').textContent='条（包邮）';
+    document.getElementById('qty-hint').textContent='🌟 1条=10包，全额包邮';
+    document.getElementById('qty-total-price').innerHTML=`¥${(curP.price*n)}<small>`;
+  }
+}
+function gotoContact(){
+  if(curP){
+    const n=parseInt(document.getElementById('qty-n').value);
+    const typeLabel=buyType==='pack'?'包':'条';
+    const sel=document.getElementById('form-prod');
+    for(let i=0;i<sel.options.length;i++){
+      if(sel.options[i].text===curP.name){ sel.selectedIndex=i; break; }
+    }
+    const ta=document.querySelector('textarea[name=msg]');
+    if(ta) ta.value=(ta.value?ta.value+'\n':'')+`${curP.name} × ${n}${typeLabel}`;
+  }
+  closeM();
+  document.getElementById('contact').scrollIntoView({behavior:'smooth'});
+}
+function subForm(e){
+  e.preventDefault();
+  const fd=new FormData(e.target);
+  const order={id:Date.now(),time:new Date().toLocaleString('zh-CN'),name:fd.get('name'),phone:fd.get('phone'),wechat:fd.get('wechat')||'—',product:fd.get('product')||'未选择',msg:fd.get('msg')||'—',status:'待处理'};
+  const orders=JSON.parse(localStorage.getItem('orders')||'[]');
+  orders.unshift(order);
+  localStorage.setItem('orders',JSON.stringify(orders));
+  const btn=document.getElementById('sub-btn');
+  btn.textContent='提交中...'; btn.disabled=true;
+  setTimeout(()=>{
+    document.getElementById('form').style.display='none';
+    document.getElementById('success').classList.add('show');
+  },900);
+}
+render();
+</script>
+</body>
+</html>
