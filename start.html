@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>外烟国烟汇</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#F7F8FA;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#s{padding:40px;background:#fff;border-radius:16px;box-shadow:0 4px 24px rgba(0,0,0,0.08);text-align:center;max-width:400px}
+h1{font-size:20px;color:#1A1A1A;margin-bottom:8px}
+p{color:#6B7280;font-size:14px;line-height:1.6;margin-bottom:20px}
+#btn{background:#4CAF7D;color:#fff;border:none;padding:12px 28px;border-radius:8px;font-size:14px;cursor:pointer;transition:background .2s}
+#btn:hover{background:#3D9468}
+#btn:disabled{background:#9CA3AF;cursor:not-allowed}
+#err{color:#C62828;font-size:13px;margin-top:16px;display:none}
+.spin{width:20px;height:20px;border:2px solid #E5E7EB;border-top-color:#4CAF7D;border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 12px}
+@keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+<div id="s">
+<div class="spin" id="spin"></div>
+<h1>外烟国烟汇</h1>
+<p id="msg">正在加载网站...</p>
+<button id="btn" disabled>进入网站</button>
+<p id="err"></p>
+</div>
+<script>
+const BASE='https://cdn.jsdelivr.net/gh/LiTong07/my-shop@main/';
+let ok=false;
+fetch(BASE+'index.html').then(r=>r.text()).then(html=>{
+  // 替换相对路径
+  html=html.replace(/src="(?!https?:|data:|\/\/)([^"]+)"/g,'src="'+BASE+'$1"');
+  html=html.replace(/href="(?!https?:|data:|\/\/|#)([^"]+)"/g,'href="'+BASE+'$1"');
+  html=html.replace(/url\('(?!https?:|data:|\/\/)([^']+)'/g,"url('"+BASE+"$1'");
+  // 存储
+  sessionStorage.setItem('site',html);
+  ok=true;
+  document.getElementById('spin').style.display='none';
+  document.getElementById('msg').textContent='网站已加载完成！';
+  document.getElementById('btn').disabled=false;
+}).catch(e=>{
+  document.getElementById('spin').style.display='none';
+  document.getElementById('msg').textContent='加载失败';
+  document.getElementById('err').style.display='block';
+  document.getElementById('err').textContent='网络错误: '+e.message;
+});
+document.getElementById('btn').onclick=()=>{
+  if(ok){
+    document.open();
+    document.write(sessionStorage.getItem('site'));
+    document.close();
+  }
+};
+</script>
+</body>
+</html>
