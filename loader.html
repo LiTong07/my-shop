@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>外烟国烟汇</title>
+<style>
+body{margin:0;background:#F7F8FA;font-family:'Noto Sans SC',sans-serif}
+#loading{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#F7F8FA;z-index:9999}
+.spinner{width:40px;height:40px;border:3px solid #E5E7EB;border-top-color:#4CAF7D;border-radius:50%;animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+#loading p{margin-top:16px;color:#6B7280;font-size:14px}
+#error{display:none;position:fixed;inset:0;flex-direction:column;align-items:center;justify-content:center;background:#F7F8FA;z-index:9999}
+#error h2{color:#C62828;margin-bottom:12px}
+#error p{color:#6B7280;max-width:400px;text-align:center;line-height:1.6}
+#error button{margin-top:20px;padding:10px 24px;background:#4CAF7D;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:14px}
+#content{display:none}
+</style>
+</head>
+<body>
+<div id="loading"><div class="spinner"></div><p>正在加载...</p></div>
+<div id="error">
+<h2>⚠️ 加载失败</h2>
+<p>无法从 CDN 加载网站内容，可能是网络问题。</p>
+<button onclick="location.reload()">重新加载</button>
+</div>
+<div id="content"></div>
+<script>
+const BASE = 'https://cdn.jsdelivr.net/gh/LiTong07/my-shop@main/';
+async function load(){
+  try{
+    const res = await fetch(BASE + 'index.html');
+    if(!res.ok) throw new Error('HTTP ' + res.status);
+    let html = await res.text();
+    // 替换相对路径为绝对路径
+    html = html.replace(/src="(?!https?:|data:|\/\/)([^"]+)"/g, 'src="' + BASE + '$1"');
+    html = html.replace(/href="(?!https?:|data:|\/\/|#)([^"]+)"/g, 'href="' + BASE + '$1"');
+    html = html.replace(/url\('(?!https?:|data:|\/\/)([^']+)'/g, "url('" + BASE + "$1'");
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('content').style.display = 'block';
+    document.getElementById('content').innerHTML = html;
+    // 执行内联脚本
+    document.getElementById('content').querySelectorAll('script').forEach(s=>{
+      if(s.innerHTML){
+        const ns = document.createElement('script');
+        ns.textContent = s.innerHTML;
+        document.body.appendChild(ns);
+      }
+    });
+  }catch(e){
+    console.error(e);
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('error').style.display = 'flex';
+  }
+}
+load();
+</script>
+</body>
+</html>
